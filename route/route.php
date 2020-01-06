@@ -24,14 +24,11 @@ Route::get('logout', 'admin/login/logout');
 Route::get('admin', 'admin/index/index');
 Route::get('admin/home', 'admin/index/home');
 
-Route::resource('admin/intention', 'admin/intention');
-Route::post('admin/intention/getall', 'admin/intention/getall');
+Route::resource('admin/showinfo', 'admin/ShowInfo');
+Route::post('admin/showinfo/getall', 'admin/ShowInfo/getall');
 
-Route::resource('admin/keywords', 'admin/keywords');
-Route::post('admin/keywords/getall', 'admin/keywords/getall');
-
-Route::resource('admin/tags', 'admin/tags');
-Route::post('admin/tags/getall', 'admin/tags/getall');
+Route::resource('admin/showplace', 'admin/ShowPlace');
+Route::post('admin/showplace/getall', 'admin/ShowPlace/getall');
 
 Route::resource('admin/user', 'admin/user');
 

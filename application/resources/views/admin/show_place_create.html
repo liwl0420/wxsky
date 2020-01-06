@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>演出场所添加</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {load href="/static/lib/layui-v2.5.4/css/layui.css" /}
+    <style>
+        body {
+            margin: 15px;
+        }
+
+        .left-form {
+            width: 20%;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            float: left;
+        }
+
+        .left-pages {
+            padding: 20px 10px;
+            position: relative;
+            height: 90vh;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+        .layui-timeline-title {
+            color: #909399;
+            line-height: 1;
+            font-size: 13px;
+        }
+        .layui-timeline-title.is-top {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            padding-top: 4px;
+            text-align: center;
+        }
+        .is-always-shadow {
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+        }
+        .is-card {
+            border: 1px solid #EBEEF5;
+            background-color: #FFF;
+            color: #303133;
+            -webkit-transition: .3s;
+            transition: .3s;
+        }
+        .time-content-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #EBEEF5;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .time-content-body {
+            padding: 20px;
+        }
+        .time-content-body .layui-form-label {
+            padding: 0;
+            width: 30px;
+            margin-top: 8px;
+        }
+        .time-content-body .layui-input-block {
+            margin-left: 50px;
+        }
+
+        .right-main {
+            width: 80%;
+            background-color: #e9eef3;
+            text-align: center;
+            padding: 0;
+            display: block;
+            -webkit-box-flex: 1;
+            flex: 1;
+            flex-basis: auto;
+            overflow: auto;
+            box-sizing: border-box;
+            float: right;
+        }
+        .right-pages {
+            height: 90vh;
+            padding: 100px 50px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+
+        <div class="left-form layui-form">
+            <div class="left-pages layui-form">
+                <ul class="layui-timeline">
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-title is-top">第一步</div>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="is-always-shadow is-card">
+                                <div class="time-content-header">
+                                    <span>基本信息</span>
+                                </div>
+                                <div class="time-content-body">
+                                    <div class="layui-form-item">
+                                        <label class="">模板名称</label>
+                                        <div class="">
+                                            <input type="text" name="name" required lay-verify="required"
+                                                   placeholder="请输入模板名称" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-title is-top">第二步</div>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="is-always-shadow is-card">
+                                <div class="time-content-header">
+                                    <span>座位坐标</span>
+                                </div>
+                                <div class="time-content-body">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">X轴</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="xAxis" required lay-verify="required|number"
+                                                   placeholder="X轴座位数" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">Y轴</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="yAxis" required lay-verify="required|number"
+                                                   placeholder="Y轴座位数" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div style="float: right;">
+                                            <button class="layui-btn layui-btn-primary">生成</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-title is-top">第三步</div>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="is-always-shadow is-card">
+                                <div class="time-content-header">
+                                    <span>座位类型</span>
+                                </div>
+                                <div class="time-content-body">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">区域</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="axisName" required lay-verify="required"
+                                                   placeholder="区域名称" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div style="float: right;">
+                                            <button class="layui-btn layui-btn-primary">生成</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="right-main">
+            <div class="right-pages"></div>
+        </div>
+    </div>
+</div>
+{load href="/static/lib/layui-v2.5.4/layui.js" /}
+<script>
+    layui.use(['layer', 'form'], function () {
+        let $ = layui.jquery
+            , form = layui.form
+            , layer = layui.layer;
+
+
+
+    });
+</script>
+</body>
+</html>
