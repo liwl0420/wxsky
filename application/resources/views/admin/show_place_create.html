@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>演出场所添加</title>
+    <title>座位模板添加</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
@@ -73,6 +73,10 @@
         .time-content-body .layui-input-block {
             margin-left: 50px;
         }
+        .time-content-body .layui-btn-sm {
+            float: left;
+            height: 38px;
+        }
 
         .right-main {
             width: 80%;
@@ -89,8 +93,38 @@
         }
         .right-pages {
             height: 90vh;
-            padding: 100px 50px;
+            padding: 50px 20px;
             box-sizing: border-box;
+            text-align: center;
+        }
+
+        .selected-area {
+            border:2px dashed #009688;
+        }
+        .right-seat-area {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin: 0 auto;
+            padding: 5px;
+            border: 2px dashed rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        }
+        .seatItem {
+            position: absolute;
+            color: #fff;
+            line-height: 40px;
+            border-radius: 5px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
         }
     </style>
 </head>
@@ -99,7 +133,7 @@
     <div class="layui-layout layui-layout-admin">
 
         <div class="left-form layui-form">
-            <div class="left-pages layui-form">
+            <div class="left-pages">
                 <ul class="layui-timeline">
                     <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
@@ -131,22 +165,36 @@
                                 </div>
                                 <div class="time-content-body">
                                     <div class="layui-form-item">
+                                        <label class="layui-form-label">行号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="txtInitRow" name="rowNum" required lay-verify="required|number"
+                                                   placeholder="初始行号" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">列号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="txtInitCol" name="ColNum" required lay-verify="required|number"
+                                                   placeholder="初始列号" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
                                         <label class="layui-form-label">X轴</label>
                                         <div class="layui-input-block">
-                                            <input type="text" name="xAxis" required lay-verify="required|number"
+                                            <input type="text" id="txtXAxis" name="xAxis" required lay-verify="required|number"
                                                    placeholder="X轴座位数" autocomplete="off" class="layui-input"/>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">Y轴</label>
                                         <div class="layui-input-block">
-                                            <input type="text" name="yAxis" required lay-verify="required|number"
+                                            <input type="text" id="txtYAxis" name="yAxis" required lay-verify="required|number"
                                                    placeholder="Y轴座位数" autocomplete="off" class="layui-input"/>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <div style="float: right;">
-                                            <button class="layui-btn layui-btn-primary">生成</button>
+                                            <button id="btnAxisCreate" class="layui-btn layui-btn-primary">生成</button>
                                         </div>
                                     </div>
                                 </div>
@@ -159,19 +207,35 @@
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
                                 <div class="time-content-header">
+                                    <span>选择座位区域(点选或框选)</span>
+                                </div>
+                                <div class="time-content-body">
+                                    <div class="layui-form-item">
+                                        <button class="layui-btn layui-btn-fluid">撤消选中</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-title is-top">第四步</div>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="is-always-shadow is-card">
+                                <div class="time-content-header">
                                     <span>座位类型</span>
                                 </div>
                                 <div class="time-content-body">
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">区域</label>
+                                        <button class="layui-btn layui-btn-sm">默认</button>
                                         <div class="layui-input-block">
-                                            <input type="text" name="axisName" required lay-verify="required"
-                                                   placeholder="区域名称" autocomplete="off" class="layui-input"/>
+                                            <input type="text" name="defaultPrice" required lay-verify="required|number"
+                                                   placeholder="价格" autocomplete="off" class="layui-input"/>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <div style="float: right;">
-                                            <button class="layui-btn layui-btn-primary">生成</button>
+                                            <button class="layui-btn layui-btn-primary">添加</button>
                                         </div>
                                     </div>
                                 </div>
@@ -182,19 +246,135 @@
             </div>
         </div>
         <div class="right-main">
-            <div class="right-pages"></div>
+            <div class="right-pages">
+                <div class="right-seat-area" style="width: 140px;height: 90px">
+                <div class="seatItem" style="background: rgb(198, 226, 255); width: 40px; height: 40px"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 {load href="/static/lib/layui-v2.5.4/layui.js" /}
+{load href="/static/lib/selection-area-v1.1/selection-area.js" /}
 <script>
     layui.use(['layer', 'form'], function () {
         let $ = layui.jquery
             , form = layui.form
             , layer = layui.layer;
 
+        let config = {
+            container: document.querySelector('.right-pages'),
+            area: {
+                class: 'selected-area'
+            },
+            targets: '.seatItem',
+            touchable: true,
+            autostart: true,
+            callback: selection => {
+                if (selection.length == 0)
+                    console.log("empty selection");
+                else
+                    console.log(`${ selection.length } items selected`);
+            }
+        };
 
+        let selectable = new SelectionArea(config);
 
+        function errorTips(msg, id) {
+            layer.tips(msg, id, {
+                tips: [2, '#c00'],
+                tipsMore: true
+            });
+        }
+
+        $('#btnAxisCreate').on('click', function () {
+            var reg = /^[+]{0,1}(\d+)$/;
+            var txt_x = $('#txtXAxis').val()
+                ,txt_y = $('#txtYAxis').val()
+                ,txt_row = $('#txtInitRow').val()
+                ,txt_col = $('#txtInitCol').val()
+            var succ = true;
+            // if (!reg.test(txt_row) || Number(txt_x) <= 0) {
+            //     errorTips('请输入数字', '#txtXAxis');
+            //     succ = false;
+            // }
+            // if (!reg.test(txt_col) || Number(txt_x) <= 0) {
+            //     errorTips('请输入数字', '#txtXAxis');
+            //     succ = false;
+            // }
+            if (!reg.test(txt_x) || Number(txt_x) <= 0 || Number(txt_x) > 30) {
+                errorTips('请输入1~30的数字', '#txtXAxis');
+                succ = false;
+            }
+            if (!reg.test(txt_y) || Number(txt_y) <= 0 || Number(txt_y) > 30) {
+                errorTips('请输入1~30的数字', '#txtYAxis');
+                succ = false;
+            }
+            if (succ) {
+                // 生成座位图
+                var pagesSelector = $('.right-pages');
+                console.log(pagesSelector.width());
+                console.log(pagesSelector.height());
+
+                var defaultSeatItemWidth = '40px';
+                var defaultSeatItemheight = '40px';
+                var newDiv = '<div class="seatItem" style="background: rgb(198, 226, 255); width: ' + defaultSeatItemWidth + '; height: ' + defaultSeatItemheight + '"></div>'
+                pagesSelector.append(newDiv);
+            }
+        });
+        //
+        // //鼠标按下时的X Y坐标
+        // var mouseDownX;
+        // var mouseDownY;
+        // //鼠标按下时移动的X Y 坐标
+        // var mouseMoveX;
+        // var mouseMoveY;
+        //
+        // //初始化鼠标选框
+        // function init() {
+        //     $("#selected").css("display", "none");
+        //     $("#selected").css("top", "0");
+        //     $("#selected").css("left", "0");
+        //     $("#selected").css("width", "0");
+        //     $("#selected").css("height", "0");
+        // }
+        //
+        // init();
+        // var selectedSeat = new Array();//创建被选中座位数组
+        //
+        // $('#mainDiv').on('mousedown', function (event) {
+        //     mouseDownX = event.clientX;
+        //     mouseDownY = event.clientY;
+        //     console.log("mouseDownX=" + mouseDownX +" mouseDownY=" + mouseDownY );
+        //
+        //     //鼠标按下并移动画框
+        //     $("#mainDiv").on('mousemove', function(event) {
+        //         mouseMoveX = event.clientX;
+        //         mouseMoveY = event.clientY;
+        //         var moveX = mouseMoveX - mouseDownX;
+        //         var moveY = mouseMoveY - mouseDownY;
+        //
+        //         //显示鼠标画框
+        //         $("#selected").css("display", "block");
+        //         $("#selected").css("top", mouseDownY);
+        //         $("#selected").css("left", mouseDownX);
+        //         if (moveY < 0) {
+        //             $("#selected").css("top", event.clientY);
+        //         }
+        //         if (moveX < 0) {
+        //             $("#selected").css("left", event.clientX);
+        //         }
+        //         $("#selected").css("width", Math.abs(moveX));
+        //         $("#selected").css("height", Math.abs(moveY));
+        //
+        //         //鼠标抬起结束画框
+        //         $("#mainDiv").on('mouseup', function() {
+        //             console.log("mouseUpX=" + mouseMoveX + " mouseUpY=" + mouseMoveX);
+        //             $(this).unbind('mousemove');
+        //             init();
+        //         })
+        //     });
+        // });
     });
 </script>
 </body>
