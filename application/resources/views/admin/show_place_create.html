@@ -14,14 +14,14 @@
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    {load href="/static/lib/layui-v2.5.4/css/layui.css" /}
+    {load href="/static/lib/layui/css/layui.css" /}
     <style>
         body {
             margin: 15px;
         }
 
         .left-form {
-            width: 20%;
+            width: 260px;
             box-sizing: border-box;
             flex-shrink: 0;
             float: left;
@@ -79,7 +79,9 @@
         }
 
         .right-main {
-            width: 80%;
+            width:-webkit-calc(100% - 260px);
+            width:-moz-calc(100% - 260px);
+            width:calc(100% - 260px);
             background-color: #e9eef3;
             text-align: center;
             padding: 0;
@@ -93,7 +95,7 @@
         }
         .right-pages {
             height: 90vh;
-            padding: 50px 20px;
+            padding: 20px 20px;
             box-sizing: border-box;
             text-align: center;
         }
@@ -107,16 +109,13 @@
             display: flex;
             -ms-flex-wrap: wrap;
             flex-wrap: wrap;
-            margin: 0 auto;
-            padding: 5px;
+            margin: 50px auto;
             border: 2px dashed rgba(0,0,0,0.2);
             border-radius: 5px;
         }
-        }
         .seatItem {
-            position: absolute;
+            position: relative;
             color: #fff;
-            line-height: 40px;
             border-radius: 5px;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -126,13 +125,20 @@
             display: -ms-flexbox;
             display: flex;
         }
+        .seatColorShow {
+            width: 20px;
+            height: 20px;
+            margin: 8px 5px;
+            border-radius: 50%;
+            float: left
+        }
     </style>
 </head>
 <body>
 <div class="layui-layout-body">
     <div class="layui-layout layui-layout-admin">
 
-        <div class="left-form layui-form">
+        <div class="left-form">
             <div class="left-pages">
                 <ul class="layui-timeline">
                     <li class="layui-timeline-item">
@@ -141,12 +147,12 @@
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
                                 <div class="time-content-header">
-                                    <span>基本信息</span>
+                                    <span>模板信息</span>
                                 </div>
                                 <div class="time-content-body">
                                     <div class="layui-form-item">
-                                        <label class="">模板名称</label>
-                                        <div class="">
+                                        <label>模板名称</label>
+                                        <div>
                                             <input type="text" name="name" required lay-verify="required"
                                                    placeholder="请输入模板名称" autocomplete="off" class="layui-input"/>
                                         </div>
@@ -165,36 +171,22 @@
                                 </div>
                                 <div class="time-content-body">
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">行号</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="txtInitRow" name="rowNum" required lay-verify="required|number"
-                                                   placeholder="初始行号" autocomplete="off" class="layui-input"/>
+                                        <div style="margin-bottom: 10px">X轴</div>
+                                        <div>
+                                            <input type="hidden" id="txtXAxisVal" />
+                                            <div id="xAxisDiv"></div>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">列号</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="txtInitCol" name="ColNum" required lay-verify="required|number"
-                                                   placeholder="初始列号" autocomplete="off" class="layui-input"/>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">X轴</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="txtXAxis" name="xAxis" required lay-verify="required|number"
-                                                   placeholder="X轴座位数" autocomplete="off" class="layui-input"/>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">Y轴</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="txtYAxis" name="yAxis" required lay-verify="required|number"
-                                                   placeholder="Y轴座位数" autocomplete="off" class="layui-input"/>
+                                        <div style="margin-bottom: 10px">Y轴</div>
+                                        <div>
+                                            <input type="hidden" id="txtYAxisVal" />
+                                            <div id="yAxisDiv"></div>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <div style="float: right;">
-                                            <button id="btnAxisCreate" class="layui-btn layui-btn-primary">生成</button>
+                                            <button id="btnAxisCreate" class="layui-btn">生成</button>
                                         </div>
                                     </div>
                                 </div>
@@ -207,11 +199,11 @@
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
                                 <div class="time-content-header">
-                                    <span>选择座位区域(点选或框选)</span>
+                                    <span>选择座位区域</span>
                                 </div>
                                 <div class="time-content-body">
                                     <div class="layui-form-item">
-                                        <button class="layui-btn layui-btn-fluid">撤消选中</button>
+                                        <button id="btnResetSeatSelected" class="layui-btn layui-btn-primary layui-btn-fluid">撤消选中</button>
                                     </div>
                                 </div>
                             </div>
@@ -227,16 +219,71 @@
                                 </div>
                                 <div class="time-content-body">
                                     <div class="layui-form-item">
-                                        <button class="layui-btn layui-btn-sm">默认</button>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="defaultPrice" required lay-verify="required|number"
-                                                   placeholder="价格" autocomplete="off" class="layui-input"/>
+                                        <button id="btnAisle" class="layui-btn layui-btn-radius layui-btn-primary">过道</button>
+                                    </div>
+                                    <div id="seatTypeBtnList">
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div style="float: left;">
+                                            <button id="btnResetSeatType" class="layui-btn layui-btn-primary">重置</button>
+                                            <button id="btnAddSeatType" class="layui-btn">添加</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-title is-top">第五步</div>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="is-always-shadow is-card">
+                                <div class="time-content-header">
+                                    <span>座位信息</span>
+                                </div>
+                                <div class="time-content-body layui-form" lay-filter="seatFormInfo">
+                                    <div class="layui-form-item">
+                                        <label class="">初始座位排号</label>
+                                        <div class="">
+                                            <input type="text" name="rowNum" required lay-verify="required|number"
+                                                   placeholder="默认为1" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="">初始座位号</label>
+                                        <div class="">
+                                            <input type="text" name="colNum" required lay-verify="required|number"
+                                                   placeholder="默认为1" autocomplete="off" class="layui-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="">连号模式</label>
+                                        <div class="">
+                                            <select name="digitMode" lay-verify="required">
+                                                <option value="0">连续</option>
+                                                <option value="1">奇数</option>
+                                                <option value="2">偶数</option>
+                                            </select>
+                                            <input type="checkbox" name="arrayType" lay-skin="switch" lay-text="顺序|倒序" checked>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <div style="float: right;">
-                                            <button class="layui-btn layui-btn-primary">添加</button>
+                                            <button id="btnCreateSeatInfo" class="layui-btn">生成</button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-title is-top">第六步</div>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="is-always-shadow is-card">
+                                <div class="time-content-body">
+                                    <div class="layui-form-item" style="text-align: center;">
+                                        <button class="layui-btn layui-btn-fluid">提交</button>
                                     </div>
                                 </div>
                             </div>
@@ -247,20 +294,35 @@
         </div>
         <div class="right-main">
             <div class="right-pages">
-                <div class="right-seat-area" style="width: 140px;height: 90px">
-                <div class="seatItem" style="background: rgb(198, 226, 255); width: 40px; height: 40px"></div>
-                </div>
             </div>
         </div>
     </div>
 </div>
-{load href="/static/lib/layui-v2.5.4/layui.js" /}
+
+<div id="addSeatTypeDiv" style="margin: 20px;display: none">
+    <div class="layui-form-item">
+        <label class="layui-form-label">座位价格</label>
+        <div class="layui-input-block">
+            <input id="txtSeatPrice" type="text" placeholder="请输入价格(整数)" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">座位颜色</label>
+        <div class="layui-input-block">
+            <input id="txtSeatColor" type="hidden" value="#ff0000" />
+            <div id="colorSelDiv"></div>
+        </div>
+    </div>
+</div>
+{load href="/static/lib/layui/layui.js" /}
 {load href="/static/lib/selection-area-v1.1/selection-area.js" /}
 <script>
-    layui.use(['layer', 'form'], function () {
+    layui.use(['layer', 'form', 'slider', 'colorpicker'], function () {
         let $ = layui.jquery
             , form = layui.form
-            , layer = layui.layer;
+            , layer = layui.layer
+            , slider = layui.slider
+            , colorpicker = layui.colorpicker;
 
         let config = {
             container: document.querySelector('.right-pages'),
@@ -271,110 +333,294 @@
             touchable: true,
             autostart: true,
             callback: selection => {
-                if (selection.length == 0)
+                if (selection.length == 0) {
                     console.log("empty selection");
-                else
-                    console.log(`${ selection.length } items selected`);
+                } else {
+                    console.log(`${selection.length} items selected`);
+                    for (var i = 0; i < selection.length; i++) {
+                        doSelect(selection[i]);
+                    }
+                }
+                //console.log(selection);
             }
         };
-
         let selectable = new SelectionArea(config);
 
+        // X轴滑块，列数
+        var xAxisSlider = slider.render({elem: '#xAxisDiv',min: 0,max: 50,change:function(value){
+                $('#txtXAxisVal').val(value);
+            }});
+        // Y轴滑块，行数
+        var yAxisSlider = slider.render({elem: '#yAxisDiv',min: 0,max: 50,change:function (value) {
+                $('#txtYAxisVal').val(value);
+            }});
+
+        // 颜色选择
+        colorpicker.render({
+            elem: $('#colorSelDiv')
+            ,predefine: true
+            ,color: '#ff0000'
+            ,colors: ['#ff0000','#ff9900','#ffff00','#00ff00','#00ffff','#0002ff','#ff00ff']
+            ,done: function (color) {
+                $('#addSeatTypeDiv').find('input[type=hidden]').val(color);
+            }
+        });
+
+        /**
+         * 座位选择与取消，改变背景色，改变属性selected
+         **/
+        function doSelect(othis) {
+            if (othis.hasAttribute('seat-selected')) {
+                // 如果有座位类型，先还原座位类型的颜色
+                if (othis.hasAttribute('seat-type')) {
+                    $(othis).css('background', $(othis).attr('seat-pre-color'));
+                } else {
+                    $(othis).css('background', '#C6E2FF');
+                }
+                $(othis).removeAttr('seat-selected');
+                $(othis).removeAttr('seat-pre-color');
+            } else {
+                //如果有座位类型，先保存座位类型的颜色
+                if (othis.hasAttribute('seat-type')) {
+                    $(othis).attr('seat-pre-color', $(othis).css('background'));
+                }
+                $(othis).css('background', '#409EFF');
+                $(othis).attr('seat-selected', '1');
+            }
+        }
+
+        /**
+         * 错误提示框
+         */
         function errorTips(msg, id) {
             layer.tips(msg, id, {
-                tips: [2, '#c00'],
+                tips: [2, '#5c5c5c'],
                 tipsMore: true
             });
         }
 
-        $('#btnAxisCreate').on('click', function () {
-            var reg = /^[+]{0,1}(\d+)$/;
-            var txt_x = $('#txtXAxis').val()
-                ,txt_y = $('#txtYAxis').val()
-                ,txt_row = $('#txtInitRow').val()
-                ,txt_col = $('#txtInitCol').val()
-            var succ = true;
-            // if (!reg.test(txt_row) || Number(txt_x) <= 0) {
-            //     errorTips('请输入数字', '#txtXAxis');
-            //     succ = false;
-            // }
-            // if (!reg.test(txt_col) || Number(txt_x) <= 0) {
-            //     errorTips('请输入数字', '#txtXAxis');
-            //     succ = false;
-            // }
-            if (!reg.test(txt_x) || Number(txt_x) <= 0 || Number(txt_x) > 30) {
-                errorTips('请输入1~30的数字', '#txtXAxis');
-                succ = false;
-            }
-            if (!reg.test(txt_y) || Number(txt_y) <= 0 || Number(txt_y) > 30) {
-                errorTips('请输入1~30的数字', '#txtYAxis');
-                succ = false;
-            }
-            if (succ) {
-                // 生成座位图
-                var pagesSelector = $('.right-pages');
-                console.log(pagesSelector.width());
-                console.log(pagesSelector.height());
+        /**
+         * 计算座位图标的大小
+         * @param itemLength 所求的长度
+         * @param itemNum 所求的数量
+         * @param spacing 所求的间隔，通常还要乘于2
+         * @param pagesHeight 总长度
+         * @param times 回调次数
+         * @returns {*[]}
+         */
+        function adapt(itemLength, itemNum, spacing, totalLength, times = 0) {
+            var cutPercent = 0.05 * times
+                ,cut_seatItem = itemLength * (1 - cutPercent)
+                ,cut_spacing = spacing * (1 - cutPercent)
+                ,total = (cut_seatItem + cut_spacing * 2) * itemNum
+                ,r = [cut_seatItem.toFixed(2), cut_spacing.toFixed(2), total.toFixed(2)];
 
-                var defaultSeatItemWidth = '40px';
-                var defaultSeatItemheight = '40px';
-                var newDiv = '<div class="seatItem" style="background: rgb(198, 226, 255); width: ' + defaultSeatItemWidth + '; height: ' + defaultSeatItemheight + '"></div>'
-                pagesSelector.append(newDiv);
+            if ( total > totalLength ) {
+                times += 1;
+                r = adapt(itemLength, itemNum, spacing, totalLength, times);
+            }
+            return r;
+        }
+
+        /**
+         * 取消选择的座位区域
+         */
+        $('#btnResetSeatSelected').on('click', function () {
+            $('div.seatItem[seat-selected=1]').each(function () {
+                doSelect($(this)[0]);
+            })
+        });
+
+        $('#btnAddSeatType').on('click', function () {
+            var l = layer.open({
+                type: 1
+                ,title: '添加座位类型'
+                ,content: $('#addSeatTypeDiv')
+                ,shadeClose: true
+                ,id: 'addSeatType'
+                ,btn: ['确定', '取消']
+                ,success: function (layero, index) {
+                }
+                ,yes: function (index, layero) {
+                    var reg = /^[+]{0,1}(\d+)$/;
+                    var priceStr = layero.find('input[type=text]').val()
+                        ,colorStr = layero.find('input[type=hidden]').val();
+                    if (!reg.test(priceStr)) {
+                        errorTips('请输入价格', '#txtSeatPrice');
+                    } else if (colorStr == '') {
+                        errorTips('请选择颜色', '#colorSelDiv');
+                    } else {
+                        var btnHtml = '<div class="layui-form-item">' +
+                            '<button data-seat-type="'+priceStr+'" data-seat-color="'+colorStr+'" class="layui-btn layui-btn-radius layui-btn-primary">' +
+                            '<div class="seatColorShow" style="background-color: '+colorStr+'"></div>' +
+                            '<span>'+priceStr+'</span>' +
+                            '</button>' +
+                            '</div>';
+                        $('#seatTypeBtnList').append(btnHtml);
+                        layer.close(index);
+                    }
+                }
+            });
+        });
+
+        /**
+         * 座位类型按钮的点击事件
+         */
+        $('#seatTypeBtnList').on('click', 'button', function () {
+            var seat_type = $(this).data('seat-type')
+                ,seat_color = $(this).data('seat-color');
+            $('div.seatItem[seat-selected=1]').each(function () {
+                $(this).css('background', seat_color);
+                $(this).attr('seat-type', seat_type);
+                $(this).removeAttr('seat-selected');
+            })
+        });
+
+        $('#btnAisle').on('click', function () {
+            $('div.seatItem[seat-selected=1]').each(function () {
+                $(this).css('background', '#C6E2FF');
+                $(this).removeAttr('seat-selected');
+                $(this).removeAttr('seat-type');
+                $(this).removeAttr('seat-pre-color');
+            });
+        });
+
+        /**
+         * 重置座位类型
+         */
+        $('#btnResetSeatType').on('click', function () {
+            $('#seatTypeBtnList').empty();
+            $('div.seatItem').each(function () {
+                $(this).css('background', '#C6E2FF');
+                $(this).removeAttr('seat-selected');
+                $(this).removeAttr('seat-type');
+                $(this).removeAttr('seat-pre-color');
+            });
+        });
+
+        /**
+         * 生成座位信息
+         */
+        $('#btnCreateSeatInfo').on('click', function () {
+            var reg = /^[+]{0,1}(\d+)$/;
+
+            var seatData = form.val('seatFormInfo')
+                ,rowNum = reg.test(seatData.rowNum) ? Number(seatData.rowNum) : 1
+                ,colNum = reg.test(seatData.colNum) ? Number(seatData.colNum) : 1
+                ,digitMode = seatData.digitMode
+                ,arrayType = seatData.arrayType === undefined ? "off" : "on";
+            console.log("row:" + rowNum + ", col:" + colNum + ", digit mode:" + digitMode + ", array type:" + arrayType);
+
+            var seatItemDivList = $('div.seatItem[seat-type]');
+            var currRow = rowNum
+                ,currCol = 0
+                ,seatItemRow = undefined;
+
+            // 完成座位号的计算
+            seatItemDivList.each(function () {
+                var tmp = $(this).data('row');  // 当前行
+
+                if (seatItemRow === undefined) {
+                    seatItemRow = tmp;
+                    currCol = colNum % 2 === 0 ? (digitMode === "1" ? colNum + 1 : colNum) : (digitMode === "2" ? colNum + 1 : colNum);
+                    if (arrayType === "off") {
+                        var tmpNum = seatItemDivList.filter('[data-row="'+tmp+'"]').length;
+                        currCol = currCol + ((tmpNum - 1) * ((digitMode === "0") ? 1 : 2));
+                    }
+                }
+                if (tmp !== seatItemRow) {
+                    currRow += 1;
+                    currCol = colNum % 2 === 0 ? (digitMode === "1" ? colNum + 1 : colNum) : (digitMode === "2" ? colNum + 1 : colNum);
+                    if (arrayType === "off") {
+                        var tmpNum = seatItemDivList.filter('[data-row="'+tmp+'"]').length;
+                        currCol = currCol + ((tmpNum - 1) * ((digitMode === "0") ? 1 : 2));
+                    }
+                    seatItemRow = tmp
+                }
+
+                $(this).attr('title', currRow + '排' + currCol + '号');
+                if (arrayType === "on") {
+                    currCol = (digitMode === "0") ? currCol + 1 : currCol + 2;
+                } else {
+                    currCol = (digitMode === "0") ? currCol - 1 : currCol - 2;
+                }
+
+            });
+
+        });
+
+        /**
+         * 根据坐标信息生成座位图
+         */
+        $('#btnAxisCreate').on('click', function () {
+            var xNum = Number($('#txtXAxisVal').val())
+                 ,yNum = Number($('#txtYAxisVal').val());
+
+            if (xNum > 0 && yNum > 0) {
+                var pagesSelector = $('.right-pages');
+                // 初始化
+                pagesSelector.empty();
+
+                // 生成座位图
+                var pagesWidth = pagesSelector.width()    // 页面区域宽度
+                    ,pagesHeight = pagesSelector.height() // 页面区域高度
+                    ,seatItemWidth = 40      // 座位的宽度
+                    ,seatItemHeight = 40     // 座位的高度
+                    ,xSpacing = 5            // 座位左右的间隔
+                    ,ySpacing = 5            // 座位上下的间隔
+                    ,seatAreaWidth = 0       // 座位区域宽度
+                    ,seatAreaHeight = 0;     // 座位区域高度
+
+                var xTotalWidth = (seatItemWidth + xSpacing * 2) * xNum;    // X轴座位的总宽度
+                var yTotalHeight = (seatItemHeight + ySpacing * 2) * yNum;  // Y轴座位的总高度
+
+                console.log('xTotalWidth:' + xTotalWidth + ', yTotalHeight:' + yTotalHeight);
+
+                if (pagesWidth > pagesHeight) {
+                    // 页面宽度大于高度时，先处理高度越界情况
+                    var r = adapt(seatItemHeight, yNum, ySpacing, pagesHeight);
+                    console.log(r);
+                    seatItemHeight = Number(r[0]);
+                    ySpacing = Number(r[1]);
+                    yTotalHeight = Number(r[2]);
+                    if (seatItemHeight < 15) {
+                        seatItemHeight = 15;
+                        ySpacing = 3;
+                        yTotalHeight = (seatItemHeight + ySpacing * 2) * yNum;
+                    }
+
+                    seatItemWidth = seatItemHeight;
+                    r = adapt(seatItemWidth, xNum, xSpacing, pagesWidth);
+                    console.log(r);
+                    seatItemWidth = Number(r[0]);
+                    xSpacing = Number(r[1]);
+                    xTotalWidth = Number(r[2]);
+                    if (seatItemWidth < 15) {
+                        seatItemWidth = 15;
+                        xSpacing = 3;
+                        xTotalWidth = (seatItemWidth + xSpacing * 2) * xNum;
+                    }
+
+                    seatAreaHeight = yTotalHeight;
+                    seatAreaWidth = xTotalWidth;
+                }
+                var seatAreaDiv = '<div class="right-seat-area" data-selectable=".setItem" style="width: ' + seatAreaWidth + 'px;height: ' + seatAreaHeight + 'px">';
+                var seatAreaDivObj = $(seatAreaDiv);
+                for (var i = 0; i < yNum; i++) {
+                    for (var j = 0; j < xNum; j++) {
+                        var newDiv = '<div class="seatItem" data-row="' + (i+1) + '" data-col="' + (j+1) + '" style="margin: '+ySpacing+'px '+xSpacing+'px; background: #C6E2FF; width: ' + seatItemWidth + 'px; height: ' + seatItemHeight + 'px;"></div>'
+                        seatAreaDivObj.append(newDiv);
+                    }
+                }
+                seatAreaDivObj.find('.seatItem').each(function () {
+                    $(this).on('click', function () {
+                        doSelect($(this)[0]);
+                    });
+                });
+                pagesSelector.append(seatAreaDivObj);
             }
         });
-        //
-        // //鼠标按下时的X Y坐标
-        // var mouseDownX;
-        // var mouseDownY;
-        // //鼠标按下时移动的X Y 坐标
-        // var mouseMoveX;
-        // var mouseMoveY;
-        //
-        // //初始化鼠标选框
-        // function init() {
-        //     $("#selected").css("display", "none");
-        //     $("#selected").css("top", "0");
-        //     $("#selected").css("left", "0");
-        //     $("#selected").css("width", "0");
-        //     $("#selected").css("height", "0");
-        // }
-        //
-        // init();
-        // var selectedSeat = new Array();//创建被选中座位数组
-        //
-        // $('#mainDiv').on('mousedown', function (event) {
-        //     mouseDownX = event.clientX;
-        //     mouseDownY = event.clientY;
-        //     console.log("mouseDownX=" + mouseDownX +" mouseDownY=" + mouseDownY );
-        //
-        //     //鼠标按下并移动画框
-        //     $("#mainDiv").on('mousemove', function(event) {
-        //         mouseMoveX = event.clientX;
-        //         mouseMoveY = event.clientY;
-        //         var moveX = mouseMoveX - mouseDownX;
-        //         var moveY = mouseMoveY - mouseDownY;
-        //
-        //         //显示鼠标画框
-        //         $("#selected").css("display", "block");
-        //         $("#selected").css("top", mouseDownY);
-        //         $("#selected").css("left", mouseDownX);
-        //         if (moveY < 0) {
-        //             $("#selected").css("top", event.clientY);
-        //         }
-        //         if (moveX < 0) {
-        //             $("#selected").css("left", event.clientX);
-        //         }
-        //         $("#selected").css("width", Math.abs(moveX));
-        //         $("#selected").css("height", Math.abs(moveY));
-        //
-        //         //鼠标抬起结束画框
-        //         $("#mainDiv").on('mouseup', function() {
-        //             console.log("mouseUpX=" + mouseMoveX + " mouseUpY=" + mouseMoveX);
-        //             $(this).unbind('mousemove');
-        //             init();
-        //         })
-        //     });
-        // });
+
     });
 </script>
 </body>
