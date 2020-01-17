@@ -30,11 +30,15 @@ Route::post('admin/showinfo/getall', 'admin/ShowInfo/getall');
 Route::resource('admin/showplace', 'admin/ShowPlace');
 Route::post('admin/showplace/getall', 'admin/ShowPlace/getall');
 
+Route::resource('admin/customer', 'admin/customer');
+
 Route::resource('admin/user', 'admin/user');
+Route::post('admin/user/getall', 'admin/user/getall');
 
 Route::resource('admin/sysop', 'admin/sysop');
 
 Route::miss('miss');
+
 
 return [
 
