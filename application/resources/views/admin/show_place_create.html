@@ -147,26 +147,6 @@
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
                                 <div class="time-content-header">
-                                    <span>模板信息</span>
-                                </div>
-                                <div class="time-content-body">
-                                    <div class="layui-form-item">
-                                        <label>模板名称</label>
-                                        <div>
-                                            <input type="text" name="name" required lay-verify="required"
-                                                   placeholder="请输入模板名称" autocomplete="off" class="layui-input"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-title is-top">第二步</div>
-                        <div class="layui-timeline-content layui-text">
-                            <div class="is-always-shadow is-card">
-                                <div class="time-content-header">
                                     <span>座位坐标</span>
                                 </div>
                                 <div class="time-content-body">
@@ -195,7 +175,7 @@
                     </li>
                     <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-title is-top">第三步</div>
+                        <div class="layui-timeline-title is-top">第二步</div>
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
                                 <div class="time-content-header">
@@ -211,7 +191,7 @@
                     </li>
                     <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-title is-top">第四步</div>
+                        <div class="layui-timeline-title is-top">第三步</div>
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
                                 <div class="time-content-header">
@@ -235,7 +215,7 @@
                     </li>
                     <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-title is-top">第五步</div>
+                        <div class="layui-timeline-title is-top">第四步</div>
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
                                 <div class="time-content-header">
@@ -264,7 +244,7 @@
                                                 <option value="1">奇数</option>
                                                 <option value="2">偶数</option>
                                             </select>
-                                            <input type="checkbox" name="arrayType" lay-skin="switch" lay-text="顺序|倒序" checked>
+                                            <input type="checkbox" name="order" lay-skin="switch" lay-text="顺序|倒序" checked>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -278,12 +258,29 @@
                     </li>
                     <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-title is-top">第六步</div>
+                        <div class="layui-timeline-title is-top">第五步</div>
                         <div class="layui-timeline-content layui-text">
                             <div class="is-always-shadow is-card">
-                                <div class="time-content-body">
-                                    <div class="layui-form-item" style="text-align: center;">
-                                        <button class="layui-btn layui-btn-fluid">提交</button>
+                                <div class="time-content-header">
+                                    <span>模板信息</span>
+                                </div>
+                                <div id="formData" class="time-content-body layui-form" lay-filter="seatFormSubmit">
+                                    <div class="layui-form-item">
+                                        <label>模板名称</label>
+                                        <div>
+                                            <input type="text" name="name" required lay-verify="required"
+                                                   placeholder="请输入模板名称" autocomplete="off" class="layui-input"/>
+                                            <input type="hidden" name="x_axis_seat_num" class="layui-input" lay-verify="required" disabled />
+                                            <input type="hidden" name="y_axis_seat_num" class="layui-input" lay-verify="required" disabled />
+                                            <input type="hidden" name="seat_type_list" class="layui-input" lay-verify="required" disabled />
+                                            <input type="hidden" name="first_seat_row" class="layui-input" lay-verify="required" disabled />
+                                            <input type="hidden" name="first_seat_col" class="layui-input" lay-verify="required" disabled />
+                                            <input type="hidden" name="digit_mode" class="layui-input" lay-verify="required" disabled />
+                                            <input type="hidden" name="seat_order" class="layui-input" lay-verify="required" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="btnSubmit">提交</button>
                                     </div>
                                 </div>
                             </div>
@@ -431,6 +428,9 @@
             })
         });
 
+        /**
+         * 添加座位类型
+         */
         $('#btnAddSeatType').on('click', function () {
             var l = layer.open({
                 type: 1
@@ -457,6 +457,18 @@
                             '</button>' +
                             '</div>';
                         $('#seatTypeBtnList').append(btnHtml);
+                        // 还原弹出框内容
+                        $('#txtSeatPrice').val("");
+                        // 保存数据到form
+                        var btnSeatData = [];
+                        $('#seatTypeBtnList button').each(function () {
+                            var btnSeatType = $(this).data('seat-type')
+                                ,btnSeatColor = $(this).data('seat-color');
+                            var tmpdata = {'seat_type': btnSeatType, 'seat_color': btnSeatColor};
+                            btnSeatData.push(tmpdata);
+                        });
+                        $('#formData input[name=seat_type_list]').val(JSON.stringify(btnSeatData));
+                        //console.log(btnSeatData);
                         layer.close(index);
                     }
                 }
@@ -476,6 +488,9 @@
             })
         });
 
+        /**
+         * 过道-座位类型
+         */
         $('#btnAisle').on('click', function () {
             $('div.seatItem[seat-selected=1]').each(function () {
                 $(this).css('background', '#C6E2FF');
@@ -508,8 +523,13 @@
                 ,rowNum = reg.test(seatData.rowNum) ? Number(seatData.rowNum) : 1
                 ,colNum = reg.test(seatData.colNum) ? Number(seatData.colNum) : 1
                 ,digitMode = seatData.digitMode
-                ,arrayType = seatData.arrayType === undefined ? "off" : "on";
-            console.log("row:" + rowNum + ", col:" + colNum + ", digit mode:" + digitMode + ", array type:" + arrayType);
+                ,order = seatData.order === undefined ? "off" : "on";
+            console.log("row:" + rowNum + ", col:" + colNum + ", digit mode:" + digitMode + ", array type:" + order);
+            // 保存数据到form
+            $('#formData input[name=first_seat_row]').val(rowNum);
+            $('#formData input[name=first_seat_col]').val(colNum);
+            $('#formData input[name=digit_mode]').val(digitMode);
+            $('#formData input[name=seat_order]').val(order);
 
             var seatItemDivList = $('div.seatItem[seat-type]');
             var currRow = rowNum
@@ -523,7 +543,7 @@
                 if (seatItemRow === undefined) {
                     seatItemRow = tmp;
                     currCol = colNum % 2 === 0 ? (digitMode === "1" ? colNum + 1 : colNum) : (digitMode === "2" ? colNum + 1 : colNum);
-                    if (arrayType === "off") {
+                    if (order === "off") {
                         var tmpNum = seatItemDivList.filter('[data-row="'+tmp+'"]').length;
                         currCol = currCol + ((tmpNum - 1) * ((digitMode === "0") ? 1 : 2));
                     }
@@ -531,7 +551,7 @@
                 if (tmp !== seatItemRow) {
                     currRow += 1;
                     currCol = colNum % 2 === 0 ? (digitMode === "1" ? colNum + 1 : colNum) : (digitMode === "2" ? colNum + 1 : colNum);
-                    if (arrayType === "off") {
+                    if (order === "off") {
                         var tmpNum = seatItemDivList.filter('[data-row="'+tmp+'"]').length;
                         currCol = currCol + ((tmpNum - 1) * ((digitMode === "0") ? 1 : 2));
                     }
@@ -539,7 +559,7 @@
                 }
 
                 $(this).attr('title', currRow + '排' + currCol + '号');
-                if (arrayType === "on") {
+                if (order === "on") {
                     currCol = (digitMode === "0") ? currCol + 1 : currCol + 2;
                 } else {
                     currCol = (digitMode === "0") ? currCol - 1 : currCol - 2;
@@ -547,6 +567,11 @@
 
             });
 
+        });
+
+        form.on('submit(btnSubmit)', function (data) {
+            console.log(data);
+            //TODO 获取座位图信息
         });
 
         /**
@@ -560,6 +585,9 @@
                 var pagesSelector = $('.right-pages');
                 // 初始化
                 pagesSelector.empty();
+                // 保存数据到form
+                $('#formData input[name=x_axis_seat_num]').val(xNum);
+                $('#formData input[name=y_axis_seat_num]').val(yNum);
 
                 // 生成座位图
                 var pagesWidth = pagesSelector.width()    // 页面区域宽度
