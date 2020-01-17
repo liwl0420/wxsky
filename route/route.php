@@ -31,6 +31,8 @@ Route::resource('admin/showplace', 'admin/ShowPlace');
 Route::post('admin/showplace/getall', 'admin/ShowPlace/getall');
 
 Route::resource('admin/customer', 'admin/customer');
+Route::post('admin/customer/getall', 'admin/customer/getall');
+
 
 Route::resource('admin/user', 'admin/user');
 Route::post('admin/user/getall', 'admin/user/getall');
