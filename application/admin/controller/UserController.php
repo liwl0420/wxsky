@@ -1,8 +1,8 @@
 <?php
 
 namespace app\admin\controller;
-
 use app\common\controller\BaseController;
+use app\common\model\UserModel;
 use think\Request;
 
 class UserController extends BaseController
@@ -15,8 +15,27 @@ class UserController extends BaseController
     public function index()
     {
         //
+        return $this->fetch();
     }
 
+    public function getAll()
+    {
+        $page = \think\facade\Request::param('page', '1');
+        $limit = \think\facade\Request::param('limit', '10');
+        $search = \think\facade\Request::param('search', null);
+
+        $data = empty($search) ?
+            UserModel::order('createtime', 'desc')->paginate(intval($limit), false, ['page' => intval($page)])
+            : UserModel::where('username', 'like', '%' . $search . '%')
+                ->order('createtime', 'desc')->paginate(intval($limit), false, ['page' => intval($page)]);
+        if ($data->isEmpty())
+            $res = ['code' => 0, 'msg' => '', 'count' => 0, 'data' => []];
+        else {
+            $count = $data->total();
+            $res = ['code' => 0, 'msg' => '', 'count' => $count, 'data' => $data->items()];
+        }
+        return json($res);
+    }
     /**
      * 显示创建资源表单页.
      *
@@ -24,7 +43,7 @@ class UserController extends BaseController
      */
     public function create()
     {
-        //
+        return $this->fetch();
     }
 
     /**
@@ -58,6 +77,7 @@ class UserController extends BaseController
     public function edit($id)
     {
         //
+        return $this->fetch();
     }
 
     /**
