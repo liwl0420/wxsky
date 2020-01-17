@@ -84,7 +84,7 @@
             var data = obj.data;
             //console.log(obj)
             if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
+                layer.confirm('确定要删除吗？', function(index){
                     obj.del();
                     layer.close(index);
                 });
@@ -92,7 +92,7 @@
                 layer.open({
                     type: 2,
                     title: '用户编辑',
-                    area: ['650px', '450px'],
+                    area: ['600px', '380px'],
                     scrolling:'no',
                     content: 'user/1/edit',//iframe弹层的页面地址
 
@@ -105,7 +105,14 @@
         $('.data-add-btn').on('click', function () {
             var othis = parent.layui.$(".layui-tab-content div.layui-show").eq(0)
                 , oiframe = othis.children('iframe').eq(0);
-            //oiframe.attr('src', 'admin/intention/create');
+            layer.open({
+                type: 2,
+                title: '用户添加',
+                area: ['600px', '380px'],
+                scrolling:'no',
+                content: 'user/create',//iframe弹层的页面地址
+            });
+            //oiframe.attr('src', 'admin/user/create');
         });
 
         // 删除事件
